@@ -9,6 +9,7 @@
 import { ref, defineProps } from "vue";
 import { useRouter } from "vue-router";
 import { saveToLocalStorage } from "@/helpers/localStorage";
+import { CustomWebSocket } from "@/services/WebSocket";
 
 const props = defineProps({
   socket: Object,
@@ -20,7 +21,8 @@ const name = ref<string>("");
 
 const enterСhat = (): void => {
   saveToLocalStorage("user", name.value);
-  props.socket.emit("user", { name: name.value, id: props.socket.id });
+  const webSocket = new CustomWebSocket(props.socket);
+  webSocket.createUser(name.value);
   router.push({ name: "chat" });
 };
 </script>
@@ -29,8 +31,8 @@ const enterСhat = (): void => {
 .home {
   display: flex;
   justify-content: center;
+  align-items: center;
   height: 100vh;
-  height: fit-content;
 }
 .home__input {
   padding: 10px;

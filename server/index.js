@@ -24,11 +24,13 @@ socketIo.on("connection", (socket) => {
   console.log(`${socket.id} user connecting`);
 
   socket.on("user", (data) => {
-    const userExists = users.some(
-      (user) => user.id === data.id && user.name === data.name
-    );
+    const userExists = users.some((user) => {
+      user.id === data.id && user.name === data.name;
+    });
 
-    if (!userExists) users.push(data);
+    if (!userExists) {
+      users.push(data);
+    }
 
     setTimeout(() => {
       socketIo.emit("responseUser", users);

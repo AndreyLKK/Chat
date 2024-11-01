@@ -16,6 +16,7 @@
 import { defineProps, ref } from "vue";
 import { getFromLocalStorage } from "@/helpers/localStorage.ts";
 import { UserMessage } from "@/types";
+import { CustomWebSocket } from "@/services/WebSocket.js";
 
 const props = defineProps({
   socket: Object,
@@ -25,14 +26,11 @@ const message = ref<string>("");
 
 const handlerSend = (): void => {
   if (message.value && (getFromLocalStorage("user") as string)) {
-    const myMsg: UserMessage = {
-      name: getFromLocalStorage("user"),
-      text: message.value,
-      id: props.socket.id,
-      socketID: props.socket.id,
-    };
-    props.socket.emit("message", myMsg as UserMessage);
-    props.socket.emit("saveHistory", myMsg as UserMessage);
+    const getNameLs = getFromLocalStorage("user");
+
+    const webSocket = new CustomWebSocket(props.socket);
+    webSocket.createMessage(getNameLs, message.value);
+    webSocket.saveHistoryMsg(getNameLs, message.value);
 
     message.value = "";
   }

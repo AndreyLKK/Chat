@@ -1,8 +1,10 @@
 <template>
   <div class="users">
     <h2 class="users__title">Users</h2>
-    <ul class="users__list" v-for="user in users" :key="user.id">
-      <li class="users__item">{{ user.name }}</li>
+    <ul class="users__list">
+      <li class="users__item" v-for="user in users" :key="user.id">
+        {{ user.name }}
+      </li>
     </ul>
     <button @click="clearHistoryMessage">Удалить</button>
   </div>
@@ -11,6 +13,7 @@
 <script setup lang="ts">
 import { defineProps, ref } from "vue";
 import { User } from "@/types";
+import { CustomWebSocket } from "@/services/WebSocket.js";
 
 const props = defineProps({
   socket: Object,
@@ -18,13 +21,8 @@ const props = defineProps({
 
 const users = ref([]);
 
-props.socket.on("responseUser", (data: User): void => {
-  users.value = data;
-});
-
-props.socket.on("updateUsers", (data: User): void => {
-  users.value = data;
-});
+const webSocket = new CustomWebSocket(props.socket, users);
+webSocket.init();
 </script>
 
 <style lang="scss" scoped>

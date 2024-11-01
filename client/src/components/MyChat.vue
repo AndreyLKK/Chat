@@ -16,6 +16,7 @@ import MyInputMessage from "@/components/MyInputMessage.vue";
 import { useRouter } from "vue-router";
 import { removeFromLocalStorage } from "@/helpers/localStorage.ts";
 import { UserMessage } from "@/types";
+import { CustomWebSocket } from "@/services/WebSocket.js";
 
 const props = defineProps({
   socket: Object,
@@ -30,9 +31,12 @@ const handleHistoryReceived = (data: UserMessage): void => {
 };
 
 onMounted(() => {
-  props.socket.emit("getHistory");
+  // props.socket.emit("getHistory");
 
-  props.socket.on("getHistory", handleHistoryReceived);
+  // props.socket.on("getHistory", handleHistoryReceived);
+  const webSocket = new CustomWebSocket(props.socket);
+  webSocket.eventGetHistory();
+  webSocket.getHistory(handleHistoryReceived);
 });
 
 const handlerLeave = () => {
