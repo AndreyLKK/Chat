@@ -18,6 +18,7 @@ import {
   createConnection,
   responseUser,
   updateUsers,
+  readyClient,
 } from "@/services/WebSocket";
 
 const authStore = useAuth();
@@ -36,12 +37,18 @@ onMounted(() => {
     // console.log("asdzxc", users.value);
 
     // Загружаем начальный список пользователей
+    console.log("fgh", authStore.user.email);
+    readyClient();
     responseUser((usersList) => {
+      console.log("zxc", usersList);
+
       users.value = usersList;
     });
 
     // Подписываемся на обновления через WebSocket
     updateUsers((updatedUsers) => {
+      console.log("updateUsers");
+
       users.value = updatedUsers;
     });
   }

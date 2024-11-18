@@ -23,10 +23,15 @@ export function createUser(name) {
 }
 
 export function responseUser(callback) {
-  socket.on("responseUser", async (usersList) => {
-    await callback(usersList);
-    console.log("asd", usersList);
+  socket.on("responseUser", (usersList) => {
+    console.log(usersList);
+
+    callback(usersList);
   });
+}
+
+export function readyClient() {
+  socket.emit("ready");
 }
 
 export function removeUser(email) {

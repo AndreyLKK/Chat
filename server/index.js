@@ -24,20 +24,19 @@ socketIo.on("connection", (socket) => {
   console.log(`${socket.id} user connecting`);
 
   socket.on("user", (data) => {
+    // socket.on("addUser", (data) => {
     users.push(data);
+    socketIo.emit("responseUser", users);
+    // })
+  });
+  socket.on("ready", () => {
+    socketIo.emit("responseUser", users);
+  });
 
-    // setTimeout(() => {
-      socketIo.emit("responseUser", users);
-    // }, 2000);
-    console.log(users);
+  socket.on("removeUser", (data) => {
+    users = users.filter((el) => el.name !== data.name);
 
-    socket.on("removeUser", (data) => {
-      users = users.filter((el) => el.name !== data.name);
-
-      setTimeout(() => {
-        socketIo.emit("updateUsers", users);
-      }, 2000);
-    });
+    socketIo.emit("updateUsers", users);
   });
 
   socket.on("saveHistory", (data) => {

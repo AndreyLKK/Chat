@@ -39,12 +39,10 @@ onMounted(() => {
   eventGetHistory();
   getHistoryMsg((data) => {
     messages.value = data;
-    console.log(data);
   });
 });
 
 responseMessage((data) => {
-  console.log("Получено сообщение от сервера:", data);
   messages.value.push(data);
 });
 
