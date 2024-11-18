@@ -1,7 +1,7 @@
 <template>
-  <div>
-    <h2>Войдите</h2>
-    <form class="entrance" @submit.prevent="authStore.loginUser">
+  <div class="entrance">
+    <h2 class="entrance__title">Войдите</h2>
+    <form class="entrance__form" @submit.prevent="authStore.loginUser">
       <label class="entrance__text" for="email">Введите почту</label>
       <input
         class="entrance__input"
@@ -18,6 +18,9 @@
       />
       <button class="entrance__btn" type="submit">Войти</button>
     </form>
+    <router-link class="entrance__link" :to="{ name: 'register' }"
+      >Перейти к регистрации</router-link
+    >
   </div>
 </template>
 
@@ -29,7 +32,7 @@ const authStore = useAuth();
 
 <style scoped>
 .entrance {
-  height: 100vh;
+  height: calc(100vh - 21px);
   display: flex;
   max-width: 300px;
   width: 100%;
@@ -38,7 +41,21 @@ const authStore = useAuth();
   flex-direction: column;
 }
 
+.entrance__title {
+  margin-bottom: 100px;
+  font-size: 40px;
+}
+
+.entrance__form {
+  display: flex;
+  flex-direction: column;
+}
+
 .entrance__input:not(:last-child) {
   margin-bottom: 10px;
+}
+
+.entrance__link {
+  margin-top: 40px;
 }
 </style>

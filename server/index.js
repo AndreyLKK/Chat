@@ -49,9 +49,7 @@ socketIo.on("connection", (socket) => {
   });
 
   socket.on("message", (data) => {
-    setTimeout(() => {
-      socketIo.emit("responseMessage", data);
-    }, 2000);
+    socketIo.emit("responseMessage", data);
   });
   socket.on("userDisconnected", (data) => {
     console.log(`User disconnected: ${data.id}`);

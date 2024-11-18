@@ -19,7 +19,7 @@ import MySidebar from "@/components/MySidebar.vue";
 <style scoped lang="scss">
 .content {
   display: flex;
-  height: calc(100vh - 40px);
+  height: calc(100vh - 61px);
   border-top: 1px solid #cecece;
   margin-bottom: 40px;
 }

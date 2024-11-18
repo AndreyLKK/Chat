@@ -9,7 +9,9 @@ export const requiresAuth = (to, from, next) => {
     }
 
     if (!user) {
-      to.path !== "/login" ? next({ name: "login" }) : next();
+      to.path === "/register" || to.path === "/login"
+        ? next()
+        : next({ name: "login" });
     }
   });
 };

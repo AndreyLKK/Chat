@@ -4,7 +4,10 @@
       Водйите в профиль
     </button>
     <p class="header_text" v-else>{{ authStore.user.email }}</p>
-    <router-link class="header__link" :to="{ name: 'main' }"
+    <router-link
+      v-if="authStore.user"
+      class="header__link"
+      :to="{ name: 'main' }"
       >На главную</router-link
     >
   </div>

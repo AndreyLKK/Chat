@@ -30,7 +30,6 @@ const handlerLeave = () => {
 .chat {
   display: flex;
   flex-direction: column;
-  height: 100%;
   padding: 30px 20px 0px 20px;
 }
 
