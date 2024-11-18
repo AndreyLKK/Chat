@@ -3,55 +3,27 @@
     <button class="chat__leave" @click="handlerLeave">Покинуть чат</button>
     <div class="chat__line"></div>
     <div class="chat__flex">
-      <MyMessagesUsers :socket="socket" :messages="messages" />
+      <MyMessagesUsers />
     </div>
-    <MyInputMessage :socket="socket" />
+    <MyInputMessage />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps, onBeforeUnmount, onMounted } from "vue";
+import { useRouter } from "vue-router";
 import MyMessagesUsers from "@/components/MyMessagesUsers.vue";
 import MyInputMessage from "@/components/MyInputMessage.vue";
-import { useRouter } from "vue-router";
-import { removeFromLocalStorage } from "@/helpers/localStorage.ts";
-import { UserMessage } from "@/types";
-import { CustomWebSocket } from "@/services/WebSocket.js";
+import { useAuth } from "@/stores";
+import { removeUser } from "@/services/WebSocket";
 
-const props = defineProps({
-  socket: Object,
-});
+const authStore = useAuth();
 
 const router = useRouter();
 
-const messages = ref<UserMessage[]>([]);
-
-const handleHistoryReceived = (data: UserMessage): void => {
-  messages.value = data;
-};
-
-onMounted(() => {
-  // props.socket.emit("getHistory");
-
-  // props.socket.on("getHistory", handleHistoryReceived);
-  const webSocket = new CustomWebSocket(props.socket);
-  webSocket.eventGetHistory();
-  webSocket.getHistory(handleHistoryReceived);
-});
-
 const handlerLeave = () => {
-  removeFromLocalStorage("user");
-  props.socket.emit("removeUser", { id: props.socket.id });
-  router.push("/");
+  removeUser(authStore.user.email);
+  router.push({ name: "main" });
 };
-
-onBeforeUnmount(() => {
-  props.socket.off("getHistory", handleHistoryReceived);
-});
-
-props.socket.on("response", (data: UserMessage): void => {
-  messages.value.push(data);
-});
 </script>
 
 <style lang="scss" scoped>

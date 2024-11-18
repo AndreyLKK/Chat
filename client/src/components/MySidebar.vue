@@ -6,23 +6,46 @@
         {{ user.name }}
       </li>
     </ul>
-    <button @click="clearHistoryMessage">Удалить</button>
   </div>
 </template>
 
-<script setup lang="ts">
-import { defineProps, ref } from "vue";
-import { User } from "@/types";
-import { CustomWebSocket } from "@/services/WebSocket.js";
+<script setup>
+import { onMounted, ref } from "vue";
+// import { User } from "@/types";
+// import { CustomWebSocket } from "@/services/WebSocket.js";
+import { useAuth } from "@/stores";
+import {
+  createConnection,
+  responseUser,
+  updateUsers,
+} from "@/services/WebSocket";
 
-const props = defineProps({
-  socket: Object,
-});
+const authStore = useAuth();
+
+// const props = defineProps({
+//   socket: Object,
+// });
 
 const users = ref([]);
 
-const webSocket = new CustomWebSocket(props.socket, users);
-webSocket.init();
+onMounted(() => {
+  if (authStore.user && authStore.user.email) {
+    // Устанавливаем WebSocket-соединение
+
+    createConnection();
+    // console.log("asdzxc", users.value);
+
+    // Загружаем начальный список пользователей
+    responseUser((usersList) => {
+      users.value = usersList;
+    });
+
+    // Подписываемся на обновления через WebSocket
+    updateUsers((updatedUsers) => {
+      users.value = updatedUsers;
+    });
+  }
+});
 </script>
 
 <style lang="scss" scoped>

@@ -1,16 +1,20 @@
 <template>
-  <div class="main">
-    <router-view :socket="socket" />
+  <div class="app">
+    <header>
+      <MyHeader />
+    </header>
+    <main class="main">
+      <router-view />
+    </main>
   </div>
 </template>
 
-<script setup lang="ts">
-import socketIO from "socket.io-client";
-import { onUnmounted } from "vue";
+<script setup>
+import { ref, onMounted } from "vue";
+import MyHeader from "@/components/MyHeader.vue";
+import { createConnection } from "@/services/WebSocket";
 
-const socket = socketIO.connect("http://localhost:5000");
-
-onUnmounted(() => {
-  socketIO.disconnect();
+onMounted(() => {
+  createConnection();
 });
 </script>

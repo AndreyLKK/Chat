@@ -24,20 +24,15 @@ socketIo.on("connection", (socket) => {
   console.log(`${socket.id} user connecting`);
 
   socket.on("user", (data) => {
-    const userExists = users.some((user) => {
-      user.id === data.id && user.name === data.name;
-    });
+    users.push(data);
 
-    if (!userExists) {
-      users.push(data);
-    }
-
-    setTimeout(() => {
+    // setTimeout(() => {
       socketIo.emit("responseUser", users);
-    }, 2000);
+    // }, 2000);
+    console.log(users);
 
     socket.on("removeUser", (data) => {
-      users = users.filter((el) => el.id !== data.id);
+      users = users.filter((el) => el.name !== data.name);
 
       setTimeout(() => {
         socketIo.emit("updateUsers", users);
@@ -47,16 +42,18 @@ socketIo.on("connection", (socket) => {
 
   socket.on("saveHistory", (data) => {
     historyMessage.push(data);
+    console.log("saveHistory", historyMessage);
   });
 
   socket.on("getHistory", () => {
-    socket.emit("getHistory", historyMessage);
+    socket.emit("sendHistory", historyMessage);
   });
 
   socket.on("message", (data) => {
-    socketIo.emit("response", data);
+    setTimeout(() => {
+      socketIo.emit("responseMessage", data);
+    }, 2000);
   });
-
   socket.on("userDisconnected", (data) => {
     console.log(`User disconnected: ${data.id}`);
 

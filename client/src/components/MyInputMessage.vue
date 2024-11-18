@@ -15,25 +15,27 @@
 <script setup lang="ts">
 import { defineProps, ref } from "vue";
 import { getFromLocalStorage } from "@/helpers/localStorage.ts";
-import { UserMessage } from "@/types";
-import { CustomWebSocket } from "@/services/WebSocket.js";
+import { createMessage, saveHistoryMsg } from "@/services/WebSocket.js";
+import { useAuth } from "@/stores";
+// import { UserMessage } from "@/types";
+// import { CustomWebSocket } from "@/services/WebSocket.js";
 
-const props = defineProps({
-  socket: Object,
-});
+const authStore = useAuth();
 
 const message = ref<string>("");
 
 const handlerSend = (): void => {
-  if (message.value && (getFromLocalStorage("user") as string)) {
-    const getNameLs = getFromLocalStorage("user");
+  // console.log(authStore.user.email, message.value);
 
-    const webSocket = new CustomWebSocket(props.socket);
-    webSocket.createMessage(getNameLs, message.value);
-    webSocket.saveHistoryMsg(getNameLs, message.value);
-
-    message.value = "";
-  }
+  createMessage(authStore.user.email, message.value);
+  saveHistoryMsg(authStore.user.email, message.value);
+  message.value = "";
+  // if (message.value && (getFromLocalStorage("user") as string)) {
+  //   const getNameLs = getFromLocalStorage("user");
+  // webSocket.createMessage(getNameLs, message.value);
+  // webSocket.saveHistoryMsg(getNameLs, message.value);
+  // message.value = "";
+  // }
 };
 </script>
 

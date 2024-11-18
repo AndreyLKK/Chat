@@ -2,31 +2,56 @@
   <ul class="user">
     <li
       class="user__content"
-      v-for="msg in messages"
-      :key="msg.socketID"
+      v-for="(msg, idx) in messages"
+      :key="idx"
       :class="{
-        'user__content--me': msg?.name === getFromLocalStorage('user'),
-        'user__content--other': msg?.name !== getFromLocalStorage('user'),
+        'user__content--me': msg?.name === authStore.user.email,
+        'user__content--other': msg?.name !== authStore.user.email,
       }"
     >
       <p class="user__name">{{ msg?.name }}</p>
       <p class="user__message">
-        {{ msg?.text }}
+        {{ msg?.message }}
       </p>
     </li>
   </ul>
 </template>
 
-<script setup lang="ts">
-import { defineProps } from "vue";
+<script setup>
+import { onMounted, onBeforeUnmount, ref } from "vue";
 import { getFromLocalStorage } from "@/helpers/localStorage.ts";
-import { UserMessage } from "@/types";
+// import { UserMessage } from "@/types";
+import {
+  createConnection,
+  getHistoryMsg,
+  eventGetHistory,
+  responseMessage,
+} from "@/services/WebSocket.js";
+import { useAuth } from "@/stores";
 
-interface Props {
-  messages: UserMessage[];
-}
+const authStore = useAuth();
 
-defineProps<Props>();
+const messages = ref([]);
+
+onMounted(() => {
+  createConnection();
+
+  eventGetHistory();
+  getHistoryMsg((data) => {
+    messages.value = data;
+    console.log(data);
+  });
+});
+
+responseMessage((data) => {
+  console.log("Получено сообщение от сервера:", data);
+  messages.value.push(data);
+});
+
+onBeforeUnmount(() => {
+  const socket = createConnection();
+  socket.off("responseMessage");
+});
 </script>
 
 <style scoped lang="scss">

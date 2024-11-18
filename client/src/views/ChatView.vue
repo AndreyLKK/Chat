@@ -1,19 +1,19 @@
 <template>
   <div class="content">
-    <MySidebar class="content__sidebar" :socket="socket" />
-    <MyChat class="content__chat" :socket="socket" />
+    <MySidebar class="content__sidebar" />
+    <MyChat class="content__chat" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps } from "vue";
+// import { ref, defineProps } from "vue";
 import MyChat from "@/components/MyChat.vue";
 import MySidebar from "@/components/MySidebar.vue";
-import { UserMessage } from "@/types";
+// import { UserMessage } from "@/types";
 
-defineProps({
-  socket: Object,
-});
+// defineProps({
+//   socket: Object,
+// });
 </script>
 
 <style scoped lang="scss">

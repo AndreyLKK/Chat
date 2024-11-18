@@ -1,50 +1,73 @@
-export class CustomWebSocket {
-  constructor(socket, usersRef) {
-    this.socket = socket;
-    this.usersRef = usersRef;
-  }
+import { io } from "socket.io-client";
 
-  createUser(name) {
-    const user = {
-      name: name,
-      id: this.socket.id,
-    };
-    this.socket.emit("user", user);
-  }
+let socket = null;
 
-  init() {
-    this.socket.on("responseUser", this.updateUsersList.bind(this));
-    this.socket.on("updateUsers", this.updateUsersList.bind(this));
+export function createConnection() {
+  if (!socket) {
+    socket = io("http://localhost:5000");
   }
+  return socket;
+}
 
-  updateUsersList(data) {
-    this.usersRef.value = data;
-  }
+export function disconnect() {
+  this.socket.on("disconnect", () => {
+    console.log("Соединение с WebSocket закрыто");
+  });
+}
 
-  buildMessage(name, message) {
-    return {
-      name: name,
-      text: message,
-      id: this.socket.id,
-      socketID: this.socket.id,
-    };
-  }
+export function createUser(name) {
+  const user = {
+    name: name,
+  };
+  socket.emit("user", user);
+}
 
-  createMessage(name, message) {
-    const msg = this.buildMessage(name, message);
-    this.socket.emit("message", msg);
-  }
+export function responseUser(callback) {
+  socket.on("responseUser", async (usersList) => {
+    await callback(usersList);
+    console.log("asd", usersList);
+  });
+}
 
-  saveHistoryMsg(name, message) {
-    const msg = this.buildMessage(name, message);
-    this.socket.emit("saveHistory", msg);
-  }
+export function removeUser(email) {
+  socket.emit("removeUser", { name: email });
+}
 
-  eventGetHistory() {
-    this.socket.emit("getHistory");
-  }
+export function updateUsers(callback) {
+  socket.on("updateUsers", (usersList) => {
+    callback(usersList);
+  });
+}
 
-  getHistory(callbalck) {
-    this.socket.on("getHistory", callbalck);
-  }
+export function createMessage(name, message) {
+  const msg = {
+    name,
+    message,
+  };
+
+  socket.emit("message", msg);
+}
+
+export function responseMessage(callback) {
+  socket.on("responseMessage", (data) => {
+    callback(data);
+  });
+}
+
+export function saveHistoryMsg(name, message) {
+  const msg = {
+    name,
+    message,
+  };
+  socket.emit("saveHistory", msg);
+}
+
+export function eventGetHistory() {
+  socket.emit("getHistory");
+}
+
+export function getHistoryMsg(callbalck) {
+  socket.on("sendHistory", (data) => {
+    callbalck(data);
+  });
 }
