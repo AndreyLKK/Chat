@@ -45,7 +45,7 @@ const authStore = useAuth();
 
 <style scoped>
 .registration {
-  height: calc(100vh - 21px);
+  height: calc(100vh - 61px);
   display: flex;
   max-width: 300px;
   width: 100%;

@@ -1,5 +1,5 @@
 <template>
-  <ul class="user">
+  <ul class="user" ref="messagesContainer">
     <li
       class="user__content"
       v-for="(msg, idx) in messages"
@@ -18,7 +18,7 @@
 </template>
 
 <script setup>
-import { onMounted, onBeforeUnmount, ref } from "vue";
+import { onMounted, onBeforeUnmount, ref, nextTick } from "vue";
 import { getFromLocalStorage } from "@/helpers/localStorage.ts";
 // import { UserMessage } from "@/types";
 import {
@@ -33,6 +33,8 @@ const authStore = useAuth();
 
 const messages = ref([]);
 
+const messagesContainer = ref(null);
+
 onMounted(() => {
   createConnection();
 
@@ -44,7 +46,19 @@ onMounted(() => {
 
 responseMessage((data) => {
   messages.value.push(data);
+  nextTick(() => {
+    scrollToBottom();
+  });
 });
+
+const scrollToBottom = () => {
+  if (messagesContainer.value) {
+    const lastMessage = messagesContainer.value.lastElementChild;
+    if (lastMessage) {
+      lastMessage.scrollIntoView({ behavior: "auto", block: "end" });
+    }
+  }
+};
 
 onBeforeUnmount(() => {
   const socket = createConnection();
@@ -55,7 +69,13 @@ onBeforeUnmount(() => {
 <style scoped lang="scss">
 .user {
   overflow-y: auto;
+  height: auto;
 }
+
+.user::-webkit-scrollbar {
+  display: none;
+}
+
 .user__content {
   text-align: right;
 }

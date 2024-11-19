@@ -4,12 +4,6 @@
       Водйите в профиль
     </button>
     <p class="header_text" v-else>{{ authStore.user.email }}</p>
-    <router-link
-      v-if="authStore.user"
-      class="header__link"
-      :to="{ name: 'main' }"
-      >На главную</router-link
-    >
   </div>
 </template>
 
@@ -24,5 +18,6 @@ const authStore = useAuth();
   display: flex;
   justify-content: space-between;
   flex-direction: row-reverse;
+  padding-top: 40px;
 }
 </style>

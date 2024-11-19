@@ -35,7 +35,7 @@ const userCreationCall = () => {
 
 <style scoped>
 .main-page {
-  height: 100vh;
+  height: calc(100vh - 61px);
   display: flex;
   justify-content: center;
   align-items: center;

@@ -24,8 +24,6 @@ export function createUser(name) {
 
 export function responseUser(callback) {
   socket.on("responseUser", (usersList) => {
-    console.log(usersList);
-
     callback(usersList);
   });
 }

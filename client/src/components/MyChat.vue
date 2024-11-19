@@ -43,12 +43,24 @@ const handlerLeave = () => {
 
 .chat__line {
   border-bottom: 1px solid #cecece;
-  margin: 40px 0px;
+  margin-top: 40px;
 }
 
 .chat__flex {
   flex: 1;
-  overflow-y: auto;
-  max-height: calc(100vh - 140px);
+  overflow-y: scroll;
+  max-height: calc(100vh - 180px);
+}
+
+.chat__flex::-webkit-scrollbar {
+  width: 0px;
+}
+
+.chat__flex::-webkit-scrollbar-thumb {
+  background: transparent;
+}
+
+.chat__flex::-webkit-scrollbar-track {
+  background: transparent;
 }
 </style>

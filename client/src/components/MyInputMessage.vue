@@ -17,25 +17,15 @@ import { defineProps, ref } from "vue";
 import { getFromLocalStorage } from "@/helpers/localStorage.ts";
 import { createMessage, saveHistoryMsg } from "@/services/WebSocket.js";
 import { useAuth } from "@/stores";
-// import { UserMessage } from "@/types";
-// import { CustomWebSocket } from "@/services/WebSocket.js";
 
 const authStore = useAuth();
 
 const message = ref<string>("");
 
 const handlerSend = (): void => {
-  // console.log(authStore.user.email, message.value);
-
   createMessage(authStore.user.email, message.value);
   saveHistoryMsg(authStore.user.email, message.value);
   message.value = "";
-  // if (message.value && (getFromLocalStorage("user") as string)) {
-  //   const getNameLs = getFromLocalStorage("user");
-  // webSocket.createMessage(getNameLs, message.value);
-  // webSocket.saveHistoryMsg(getNameLs, message.value);
-  // message.value = "";
-  // }
 };
 </script>
 
