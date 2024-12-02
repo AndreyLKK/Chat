@@ -10,7 +10,6 @@ export const useAuth = defineStore("auth", () => {
   const password = ref("");
   const confirmPassword = ref("");
   const router = useRouter();
-  const webSocket = ref(null);
 
   const registerUser = async () => {
     try {

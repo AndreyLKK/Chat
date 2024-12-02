@@ -1,5 +1,6 @@
 <template>
   <div class="content">
+    <MyConfirmDelete v-if="confirmDeleteStore.isOpen" />
     <MySidebar class="content__sidebar" />
     <MyChat class="content__chat" />
   </div>
@@ -9,7 +10,11 @@
 // import { ref, defineProps } from "vue";
 import MyChat from "@/components/MyChat.vue";
 import MySidebar from "@/components/MySidebar.vue";
+import MyConfirmDelete from "@/components/MyConfirmDelete.vue";
+import { useConfirmDelete } from "@/stores";
 // import { UserMessage } from "@/types";
+
+const confirmDeleteStore = useConfirmDelete();
 
 // defineProps({
 //   socket: Object,

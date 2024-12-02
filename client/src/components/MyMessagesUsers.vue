@@ -9,10 +9,13 @@
         'user__content--other': msg?.name !== authStore.user.email,
       }"
     >
-      <p class="user__name">{{ msg?.name }}</p>
+      <p class="user__name">
+        {{ nameDefinition(msg) }}
+      </p>
       <p class="user__message">
         {{ msg?.message }}
       </p>
+      <button @click="messageDeletionEvent(msg, idx)">удалить</button>
     </li>
   </ul>
 </template>
@@ -26,8 +29,12 @@ import {
   getHistoryMsg,
   eventGetHistory,
   responseMessage,
+  deleteMessageInArray,
 } from "@/services/WebSocket.js";
 import { useAuth } from "@/stores";
+import { useConfirmDelete } from "@/stores";
+
+const confirmDeleteStore = useConfirmDelete();
 
 const authStore = useAuth();
 
@@ -43,6 +50,25 @@ onMounted(() => {
     messages.value = data;
   });
 });
+
+const messageDeletionEvent = async (msg) => {
+  try {
+    const result = await confirmDeleteStore.confirmDeleteMessage();
+
+    if (result) {
+      deleteMessageInArray(msg);
+      getHistoryMsg((data) => {
+        messages.value = data;
+      });
+    }
+  } catch (error) {
+    console.log("Удаление отменено", error);
+  }
+};
+
+const nameDefinition = (msg) => {
+  return msg?.name === authStore.user.email ? "Вы" : msg?.name;
+};
 
 responseMessage((data) => {
   messages.value.push(data);

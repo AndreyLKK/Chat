@@ -51,6 +51,10 @@ export function createMessage(name, message) {
   socket.emit("message", msg);
 }
 
+export function deleteMessageInArray(messages) {
+  socket.emit("deleteMessageInServer", messages);
+}
+
 export function responseMessage(callback) {
   socket.on("responseMessage", (data) => {
     callback(data);

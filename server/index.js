@@ -41,7 +41,16 @@ socketIo.on("connection", (socket) => {
 
   socket.on("saveHistory", (data) => {
     historyMessage.push(data);
-    console.log("saveHistory", historyMessage);
+    console.log("saveHistory", data);
+  });
+
+  socket.on("deleteMessageInServer", (message) => {
+    historyMessage = historyMessage.filter(
+      (msg) => msg.message !== message.message
+    );
+    console.log("Удаленный массив", message);
+    console.log(historyMessage);
+    socketIo.emit("sendHistory", historyMessage);
   });
 
   socket.on("getHistory", () => {
